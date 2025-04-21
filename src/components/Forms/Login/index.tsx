@@ -32,7 +32,7 @@ export default function LoginForm() {
       validateOnChange={true}
     >
       {({ values, handleChange, isSubmitting, errors, touched }) => (
-        <Form className="flex flex-col justify-center gap-8 w-full max-w-2xl">
+        <Form className="flex flex-col justify-center gap-8 w-full max-w-96">
           <div>
             <Title title="Bem vindo" />
             <Paragraph title="Conectando ideias com tecnologia" />

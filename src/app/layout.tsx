@@ -3,6 +3,7 @@ import { Montserrat, Hind } from 'next/font/google';
 import 'react-toastify/dist/ReactToastify.css';
 import './globals.css';
 import { ToastContainer } from 'react-toastify';
+import Head from 'next/head';
 
 const montserrat = Montserrat({
   weight: ['400', '500', '700'], // Pesos da fonte Montserrat
@@ -27,6 +28,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <meta name="theme-color" content="bed8ff" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      </Head>
       <body className={`${montserrat.variable} ${hind.variable} antialiased`}>
         {children}
         <ToastContainer

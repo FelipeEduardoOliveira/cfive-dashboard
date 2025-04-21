@@ -6,7 +6,7 @@ interface ParagraphProps extends React.HTMLAttributes<HTMLHeadingElement> {
 
 export default function Paragraph({ className, title, ...rest }: ParagraphProps) {
   return (
-    <p className={className} {...rest}>
+    <p className={`text-[#162155] ${className}`} {...rest}>
       {title}
     </p>
   );

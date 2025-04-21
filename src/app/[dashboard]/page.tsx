@@ -1,12 +1,11 @@
 'use client';
 
 import React from 'react';
-import LoginForm from '@/components/Forms/Login';
 
 export default function Home() {
   return (
     <div className=" flex justify-center items-center min-h-screen">
-      <LoginForm />
+      <h1>Wellcome to dashboard page</h1>
     </div>
   );
 }

@@ -33,3 +33,25 @@ h5,
 h6 {
   font-family: var(--font-montserrat), sans-serif;
 }
+
+@keyframes drip {
+  0% {
+    transform: scale(1);
+    border-radius: 28px;
+    box-shadow: 0 0 0 0 rgba(25, 67, 220, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    border-radius: 40px;
+    box-shadow: 0 0 20px 5px rgba(25, 67, 220, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    border-radius: 28px;
+    box-shadow: 0 0 0 0 rgba(25, 67, 220, 0);
+  }
+}
+
+.animate-drip {
+  animation: drip 2s infinite ease-in-out;
+}

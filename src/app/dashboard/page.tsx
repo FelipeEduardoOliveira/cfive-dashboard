@@ -1,11 +1,14 @@
 'use client';
 
+import Title from '@/components/Texts/title';
 import React from 'react';
 
-export default function Home() {
+export default function Dashboard() {
   return (
-      <div className="bg-emerald-400 w-full max-w-96">
-        <h1>Wellcome to dashboard page</h1>
-      </div>
+    <div className=" w-full h-screen  flex flex-col justify-start">
+      <Title title="Overview" className="text-black font-bold text-xl text-start" />
+      {/* O conteúdo que pode ser rolado */}
+      <div className="flex-grow overflow-auto space-y-4 w-full"></div>
+    </div>
   );
 }

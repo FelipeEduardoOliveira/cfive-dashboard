@@ -1,15 +1,21 @@
 'use client';
 
-import { toaster } from '@/utils/toast';
+import React from 'react';
+import Profile from '../Profile';
+import Title from '../Texts/title';
+import { getFirstAndLastName } from '@/utils/formatNamesType';
 
 const Header = () => {
+  const [hasNotification, setHasNotification] = React.useState(false);
+  const userName = 'Felipe Eduardo Rodrigues de Oliveira';
   return (
-    <div className="flex justify-between w-full max-w-96 border">
-      <div onClick={() => toaster.success('Funcionou')}>
-        <h1>Nome do usuario</h1>
-      </div>
+    <div
+      className="flex justify-between items-center w-full max-w-96 h-20"
+      onClick={() => setHasNotification(!hasNotification)}
+    >
+      <Title title={`${getFirstAndLastName(userName)}`} className="font-semibold" />
 
-      <div>Logo perfil</div>
+      <Profile userName={userName} hasNotification={hasNotification} />
     </div>
   );
 };

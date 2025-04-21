@@ -19,7 +19,7 @@ const Menu = () => {
   ];
 
   return (
-    <div className="w-full max-w-96 h-20 rounded-[28px] bg-[#2A2B3060] flex justify-between items-center p-4 z-10 pb-safe">
+    <div className="w-full max-w-96 h-20 rounded-[28px] bg-[#2A2B3060] flex justify-between items-center p-4 z-10 mb-8 md:mb-4]">
       {itemMenu.map((item, index) => {
         const isSelected = selectedIndex === index;
         return (

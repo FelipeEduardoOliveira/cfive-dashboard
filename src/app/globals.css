@@ -55,3 +55,9 @@ h6 {
 .animate-drip {
   animation: drip 2s infinite ease-in-out;
 }
+
+.menu-fixo {
+  padding-bottom: constant(safe-area-inset-bottom); /* Safari antigo */
+  padding-bottom: env(safe-area-inset-bottom); /* Safari novo e outros */
+  z-index: 999;
+}

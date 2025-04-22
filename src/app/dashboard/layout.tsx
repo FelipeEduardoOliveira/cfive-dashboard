@@ -10,7 +10,7 @@ export default function DashboardLayout({
 }>) {
   return (
     <div
-      className={`${montserrat.variable} ${hind.variable} antialiased flex flex-col justify-between items-center h-screen p-2.5 w-full menu-fixo`}
+      className={`${montserrat.variable} ${hind.variable} antialiased flex flex-col justify-between items-center h-screen  p-2.5 w-full`}
     >
       <Header />
       <main className="overflow-y-scroll max-w-96  w-full">{children}</main>

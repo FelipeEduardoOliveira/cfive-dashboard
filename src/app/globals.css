@@ -21,6 +21,8 @@
 
 body {
   background: var(--background);
+  background-repeat: no-repeat;
+  height: 100vh;
   /* color: var(--foreground); */
   font-family: var(--font-hind), sans-serif;
 }
@@ -56,8 +58,3 @@ h6 {
   animation: drip 2s infinite ease-in-out;
 }
 
-.menu-fixo {
-  padding-bottom: constant(safe-area-inset-bottom); /* Safari antigo */
-  padding-bottom: env(safe-area-inset-bottom); /* Safari novo e outros */
-  z-index: 999;
-}

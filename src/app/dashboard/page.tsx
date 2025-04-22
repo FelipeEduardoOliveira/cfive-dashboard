@@ -1,5 +1,6 @@
 'use client';
 
+import BlogList from '@/components/BlogList';
 import ContainerDefault from '@/components/ContainerDefault';
 import ServiceContainers from '@/components/ServiceContainers';
 import Title from '@/components/Texts/title';
@@ -14,10 +15,11 @@ export default function Dashboard() {
         <ServiceContainers />
 
         <ContainerDefault title="Blog / postagens" redirect="/cadastra-blog">
-          <Title title="teste" />
-        </ContainerDefault>
-        <ContainerDefault title="Tarefas">
-          <Title title="teste" />
+          <BlogList />
+          <BlogList />
+          <BlogList />
+          <BlogList />
+          <BlogList />
         </ContainerDefault>
       </div>
     </div>

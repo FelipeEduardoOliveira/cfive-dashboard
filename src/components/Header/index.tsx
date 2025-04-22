@@ -10,7 +10,7 @@ const Header = () => {
   const userName = 'Felipe Eduardo Rodrigues de Oliveira';
   return (
     <div
-      className="flex justify-between items-center w-full max-w-96 h-20"
+      className="flex justify-between items-center w-full max-w-96 h-20 mb-2"
       onClick={() => setHasNotification(!hasNotification)}
     >
       <Title title={`${getFirstAndLastName(userName)}`} className="font-semibold" />

@@ -66,3 +66,7 @@ h6 {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.menu-container {
+  height: calc(var(--vh, 1vh) * 100);
+}

@@ -14,7 +14,7 @@ export default function Dashboard() {
       <div className="flex-grow overflow-auto space-y-4 w-full">
         <ServiceContainers />
 
-        <ContainerDefault title="Blog / postagens" redirect="/cadastra-blog">
+        <ContainerDefault title="Blog / postagens" redirect="/nova-postagem">
           <BlogList />
           <BlogList />
           <BlogList />

@@ -2,7 +2,6 @@ import React from 'react';
 import LogoCfive from '@/../public/Imagens/newLogo.jpg';
 import minText from '@/utils/minText';
 import Paragraph from '../Texts/paragraph';
-import Title from '../Texts/title';
 import Tag from '../Tag';
 
 const BlogList = () => {

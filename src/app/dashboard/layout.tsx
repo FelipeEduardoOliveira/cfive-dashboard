@@ -13,7 +13,7 @@ export default function DashboardLayout({
       className={`${montserrat.variable} ${hind.variable} antialiased flex flex-col justify-between items-center h-full  p-2.5 w-full menu-container`}
     >
       <Header />
-      <main className="overflow-y-scroll max-w-96 w-full scrollbar-hide">{children}</main>
+      <main className="overflow-y-scroll max-w-3xl w-full scrollbar-hide">{children}</main>
       <Menu />
     </div>
   );

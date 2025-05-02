@@ -6,26 +6,17 @@ import Title from '@/components/Texts/title';
 import Paragraph from '@/components/Texts/paragraph';
 import Input from '@/components/Input';
 import { FormButton } from '../../Button';
-import { toaster } from '@/utils/toast';
 import { loginSchema } from '@/utils/validations/login';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 export default function LoginForm() {
-  const history = useRouter();
-
-  const handleSubmit = (values: { nome: string; senha: string }) => {
-    console.log('Form data:', values);
-    toaster.error('Erro ao fazer login!');
-    history.push('/dashboard');
-    return;
-  };
+  const { loginContext } = useAuth();
 
   return (
     <Formik
       initialValues={{ nome: '', senha: '' }}
       onSubmit={async (values, { setSubmitting }) => {
-        await handleSubmit(values);
-        toaster.success('Login realizado com sucesso!');
+        await loginContext(values.nome, values.senha);
         setSubmitting(false);
       }}
       validationSchema={loginSchema}

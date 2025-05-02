@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { SharedHead, SharedToastContainer } from '@/components/SharedLayoutElements';
 import { montserrat, hind } from '@/styles/fonts';
+import AuthProviderClient from '@/components/providers/AuthProviderClient';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -16,10 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SharedHead />
-      <body className={`${montserrat.variable} ${hind.variable} antialiased`}>
-        {children}
-        <SharedToastContainer />
-      </body>
+      <AuthProviderClient>
+        <body className={`${montserrat.variable} ${hind.variable} antialiased`}>
+          {children}
+          <SharedToastContainer />
+        </body>
+      </AuthProviderClient>
     </html>
   );
 }

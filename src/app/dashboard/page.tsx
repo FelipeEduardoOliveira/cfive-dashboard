@@ -4,6 +4,7 @@ import BlogList from '@/components/BlogList';
 import ContainerDefault from '@/components/ContainerDefault';
 import ServiceContainers from '@/components/ServiceContainers';
 import Title from '@/components/Texts/title';
+import { EditProvider } from '@/context/EditContext';
 import React from 'react';
 
 export default function Dashboard() {

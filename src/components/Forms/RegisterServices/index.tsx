@@ -1,6 +1,5 @@
 'use client';
 
-import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
 import Title from '@/components/Texts/title';
 import Input from '@/components/Input';
@@ -9,57 +8,83 @@ import { toaster } from '@/utils/toast';
 import FieldEditor from '@/components/FieldEditor';
 import Image from 'next/image';
 import { uploadImageAndGetUrl } from '@/api/uploadImage'; // <-- sua função aqui
-import { saveBlogPost } from '@/api/savePost';
 import { useAuth } from '@/context/AuthContext';
-import { formatToFirebaseTimestamp } from '@/utils/formatToFirebaseTimestamp';
 import { Timestamp } from 'firebase/firestore';
+import { saveService } from '@/api/saveService';
+import { useEdit } from '@/context/EditContext';
+import ImagePreview from './ImagePreview';
+import { updateService } from '@/api/updateService';
 
 interface BlogFormValues {
-  title: string;
+  serviceName: string;
   desciption: string;
   image: File | null;
-  publicIn: Date | string;
 }
 
-export default function BlogForm() {
+export default function ServiceForm() {
   const { user } = useAuth();
+  const { serviceEdit } = useEdit();
+
+  const save = async (values: any, imageUrl: string) => {
+    const finalValues = {
+      serviceName: values.serviceName,
+      desciption: values.desciption,
+      image: imageUrl,
+      createBy: user?.displayName || user?.email || user?.uid || 'Anônimo',
+      active: true,
+      createdAt: Timestamp.now(),
+    };
+
+    await saveService(finalValues);
+  };
+
+  const update = async (values: any, imageUrl: string) => {
+    const finalValues = {
+      serviceName: values.serviceName,
+      desciption: values.desciption,
+      image: imageUrl,
+      active: true,
+    };
+
+    if (!serviceEdit?.id) {
+      toaster.error('Erro: Não identificamos o ID do serviço!');
+      return;
+    }
+
+    await updateService(serviceEdit.id, finalValues);
+  };
 
   const handleSubmit = async (values: BlogFormValues) => {
     try {
       let imageUrl = '';
 
       if (values.image instanceof File) {
-        imageUrl = await uploadImageAndGetUrl(values.image, 'blogImages');
+        imageUrl = await uploadImageAndGetUrl(values.image, 'servicesImage');
+      } else {
+        imageUrl = values.image || '';
       }
-
-      const finalValues = {
-        title: values.title,
-        desciption: values.desciption,
-        image: imageUrl,
-        createBy: user?.displayName || user?.email || user?.uid || 'Anônimo',
-        publicIn: formatToFirebaseTimestamp(values.publicIn || new Date()),
-        active: true,
-        createdAt: Timestamp.now(),
-      };
-
-      const docId = await saveBlogPost(finalValues);
-      toaster.success('Post enviado com sucesso!');
+      if (serviceEdit) {
+        await update(values, imageUrl);
+        toaster.success('Serviço atualizado com sucesso!');
+      } else {
+        await save(values, imageUrl);
+        toaster.success('Serviço enviado com sucesso!');
+      }
     } catch (err) {
       console.error(err);
-      toaster.error('Erro ao enviar post!');
+      toaster.error('Erro ao enviar Serviço!');
     }
   };
 
   const initialValues: BlogFormValues = {
-    title: '',
+    serviceName: '',
     desciption: '',
     image: null,
-    publicIn: '',
   };
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={serviceEdit || initialValues}
       onSubmit={async (values, { setSubmitting }) => {
         await handleSubmit(values);
         setSubmitting(false);
@@ -69,20 +94,20 @@ export default function BlogForm() {
       {({ values, handleChange, setFieldValue, isSubmitting, errors, touched }) => (
         <Form className="flex flex-col justify-center gap-8 w-full">
           <div>
-            <Title title="Novo post" />
+            <Title title="Novo serviço" />
           </div>
 
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-12">
               <Input
-                title="Titulo"
-                placeholder="Titulo"
+                title="Nome do serviço"
+                placeholder="Nome do serviço"
                 type="text"
-                name="title"
-                value={values.title}
+                name="serviceName"
+                value={values.serviceName}
                 onChange={handleChange}
-                helperText={errors.title || undefined}
-                touched={touched.title}
+                helperText={errors.serviceName || undefined}
+                touched={touched.serviceName}
               />
             </div>
 
@@ -90,17 +115,6 @@ export default function BlogForm() {
               <FieldEditor
                 value={values.desciption}
                 onChange={(newContent) => setFieldValue('desciption', newContent)}
-              />
-            </div>
-            <div className="col-span-12">
-              <Input
-                title=""
-                type="datetime-local"
-                name="publicIn"
-                value={values.publicIn}
-                onChange={handleChange}
-                helperText={errors.publicIn || undefined}
-                touched={touched.publicIn}
               />
             </div>
 
@@ -116,23 +130,16 @@ export default function BlogForm() {
                   }
                 }}
               />
-              {values?.image instanceof File ? (
-                <div className="mt-4">
-                  <Image
-                    src={URL.createObjectURL(values.image)}
-                    alt="Preview"
-                    width={400}
-                    height={200}
-                    className="rounded-md border"
-                  />
-                </div>
-              ) : (
-                <div className="w-96 h-52 bg-gray-700"></div>
-              )}
+              <ImagePreview image={values.image} />
             </div>
           </div>
 
-          <FormButton title="Enviar" loading={isSubmitting} type="submit" disabled={isSubmitting} />
+          <FormButton
+            title={serviceEdit ? 'Atualizar' : 'Salvar'}
+            loading={isSubmitting}
+            type="submit"
+            disabled={isSubmitting}
+          />
         </Form>
       )}
     </Formik>

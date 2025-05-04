@@ -15,3 +15,13 @@ export function formatToFirebaseTimestamp(date: Date | string): Timestamp {
 
   return Timestamp.fromDate(jsDate);
 }
+
+/**
+ * Converte um Timestamp do Firebase Firestore para um objeto Date.
+ *
+ * @param timestamp Timestamp do Firestore
+ * @returns Objeto Date
+ */
+export function formatFromFirebaseTimestamp(timestamp: Timestamp): Date {
+  return timestamp.toDate();
+}

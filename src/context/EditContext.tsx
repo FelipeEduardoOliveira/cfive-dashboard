@@ -1,3 +1,4 @@
+import { Timestamp } from 'firebase/firestore';
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface ServiceEdit {
@@ -8,9 +9,20 @@ interface ServiceEdit {
   serviceName: string;
 }
 
+interface BlogEdit {
+  id: string;
+  title: string;
+  desciption: string;
+  image: File | null;
+  publicIn: Timestamp | null;
+  active: boolean;
+}
+
 interface EditContextType {
   serviceEdit: ServiceEdit | null;
   setServiceEdit: (serviceEdit: ServiceEdit) => void;
+  blogEdit: BlogEdit | null;
+  setBlogEdit: (blogEdit: BlogEdit) => void;
   clearFields: () => void;
 }
 
@@ -18,13 +30,17 @@ const EditContext = createContext<EditContextType | undefined>(undefined);
 
 export const EditProvider = ({ children }: { children: ReactNode }) => {
   const [serviceEdit, setServiceEdit] = useState<ServiceEdit | null>(null);
+  const [blogEdit, setBlogEdit] = useState<BlogEdit | null>(null);
 
   const clearFields = () => {
     setServiceEdit(null);
+    setBlogEdit(null);
   };
 
   return (
-    <EditContext.Provider value={{ serviceEdit, setServiceEdit, clearFields }}>
+    <EditContext.Provider
+      value={{ serviceEdit, setServiceEdit, blogEdit, setBlogEdit, clearFields }}
+    >
       {children}
     </EditContext.Provider>
   );

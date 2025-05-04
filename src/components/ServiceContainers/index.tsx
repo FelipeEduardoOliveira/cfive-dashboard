@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Title from '../Texts/title';
 import { IoMdArrowForward } from 'react-icons/io';
-import { getAllServices } from '@/api/firestore';
+import { getAllServices } from '@/api/getAllServices';
 import { useEdit } from '@/context/EditContext';
 import { useRouter } from 'next/navigation';
 

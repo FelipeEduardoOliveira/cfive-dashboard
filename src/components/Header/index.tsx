@@ -7,8 +7,9 @@ import { getFirstAndLastName } from '@/utils/formatNamesType';
 import { useAuth } from '@/context/AuthContext';
 
 const Header = () => {
+  const { user } = useAuth();
   const [hasNotification, setHasNotification] = React.useState(false);
-  const userName = 'Felipe Eduardo Rodrigues de Oliveira';
+  const userName = user?.email === 'cfivepublicity@gmail.com' ? 'Carolyne Nascimento' : 'Anônimo';
   const { logout } = useAuth();
   return (
     <div
@@ -18,7 +19,7 @@ const Header = () => {
       <Title title={`${getFirstAndLastName(userName)}`} className="font-semibold" />
 
       <Profile userName={userName} hasNotification={hasNotification} />
-      <div onClick={logout}> Out </div>
+      {/* <div onClick={logout}> Out </div> */}
     </div>
   );
 };

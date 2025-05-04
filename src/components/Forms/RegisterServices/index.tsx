@@ -119,10 +119,20 @@ export default function ServiceForm() {
             </div>
 
             <div className="col-span-12">
-              <label className="block mb-2 text-sm font-medium text-gray-700">Imagem de capa</label>
+              <Title className="block mb-2 text-base font-bold" title="Imagem de capa" />
+
+              <label
+                htmlFor="image-upload"
+                className="inline-block px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md cursor-pointer transition-colors duration-200"
+              >
+                Selecionar imagem
+              </label>
+
               <input
+                id="image-upload"
                 type="file"
                 accept="image/*"
+                className="hidden"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
@@ -130,7 +140,14 @@ export default function ServiceForm() {
                   }
                 }}
               />
-              <ImagePreview image={values.image} />
+
+              {values.image ? (
+                <ImagePreview image={values.image} />
+              ) : (
+                <div className="w-96 h-52 mt-4 bg-gray-200 rounded-md flex items-center justify-center text-gray-500">
+                  Pré-visualização da imagem
+                </div>
+              )}
             </div>
           </div>
 

@@ -7,12 +7,17 @@ import Input from '@/components/Input';
 import { FormButton } from '../../Button';
 import { toaster } from '@/utils/toast';
 import FieldEditor from '@/components/FieldEditor';
-import Image from 'next/image';
 import { uploadImageAndGetUrl } from '@/api/uploadImage'; // <-- sua função aqui
 import { saveBlogPost } from '@/api/savePost';
 import { useAuth } from '@/context/AuthContext';
-import { formatToFirebaseTimestamp } from '@/utils/formatToFirebaseTimestamp';
+import {
+  formatFromFirebaseTimestamp,
+  formatToFirebaseTimestamp,
+} from '@/utils/formatToFirebaseTimestamp';
 import { Timestamp } from 'firebase/firestore';
+import { updatePost } from '@/api/updatePost';
+import { useEdit } from '@/context/EditContext';
+import ImagePreview from '../RegisterServices/ImagePreview';
 
 interface BlogFormValues {
   title: string;
@@ -23,43 +28,89 @@ interface BlogFormValues {
 
 export default function BlogForm() {
   const { user } = useAuth();
+  const { blogEdit } = useEdit();
+
+  const save = async (values: any, imageUrl: string) => {
+    const publicDate = values.publicIn ? new Date(values.publicIn) : new Date();
+
+    const finalValues = {
+      title: values.title,
+      desciption: values.desciption,
+      image: imageUrl,
+      createBy: user?.displayName || user?.email || user?.uid || 'Anônimo',
+      publicIn: formatToFirebaseTimestamp(publicDate),
+      active: true,
+      createdAt: Timestamp.now(),
+    };
+
+    await saveBlogPost(finalValues);
+  };
+
+  const update = async (values: any, imageUrl: string) => {
+    const finalValues = {
+      title: values.title,
+      desciption: values.desciption,
+      image: imageUrl,
+      active: true,
+    };
+
+    if (!blogEdit?.id) {
+      toaster.error('Erro: Não identificamos o ID do serviço!');
+      return;
+    }
+
+    await updatePost(blogEdit.id, finalValues);
+  };
 
   const handleSubmit = async (values: BlogFormValues) => {
     try {
       let imageUrl = '';
 
       if (values.image instanceof File) {
-        imageUrl = await uploadImageAndGetUrl(values.image, 'blogImages');
+        imageUrl = await uploadImageAndGetUrl(values.image, 'servicesImage');
+      } else {
+        imageUrl = values.image || '';
       }
 
-      const finalValues = {
-        title: values.title,
-        desciption: values.desciption,
-        image: imageUrl,
-        createBy: user?.displayName || user?.email || user?.uid || 'Anônimo',
-        publicIn: formatToFirebaseTimestamp(values.publicIn || new Date()),
-        active: true,
-        createdAt: Timestamp.now(),
-      };
-
-      const docId = await saveBlogPost(finalValues);
-      toaster.success('Post enviado com sucesso!');
+      if (blogEdit) {
+        await update(values, imageUrl);
+        toaster.success('Post atualizado com sucesso!');
+      } else {
+        await save(values, imageUrl);
+        toaster.success('Post enviado com sucesso!');
+      }
     } catch (err) {
       console.error(err);
       toaster.error('Erro ao enviar post!');
     }
   };
 
-  const initialValues: BlogFormValues = {
-    title: '',
-    desciption: '',
-    image: null,
-    publicIn: '',
+  const returnInitialValues = () => {
+    let val: BlogFormValues;
+    if (blogEdit) {
+      val = {
+        title: blogEdit.title,
+        desciption: blogEdit.desciption,
+        image: blogEdit.image,
+        publicIn: blogEdit.publicIn
+          ? formatFromFirebaseTimestamp(blogEdit.publicIn).toISOString().slice(0, 16)
+          : '',
+      };
+    } else {
+      val = {
+        title: '',
+        desciption: '',
+        image: null,
+        publicIn: '',
+      };
+    }
+
+    return val;
   };
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={returnInitialValues()}
       onSubmit={async (values, { setSubmitting }) => {
         await handleSubmit(values);
         setSubmitting(false);
@@ -105,10 +156,20 @@ export default function BlogForm() {
             </div>
 
             <div className="col-span-12">
-              <label className="block mb-2 text-sm font-medium text-gray-700">Imagem de capa</label>
+              <Title className="block mb-2 text-base font-bold" title="Imagem de capa" />
+
+              <label
+                htmlFor="image-upload"
+                className="inline-block px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md cursor-pointer transition-colors duration-200"
+              >
+                Selecionar imagem
+              </label>
+
               <input
+                id="image-upload"
                 type="file"
                 accept="image/*"
+                className="hidden"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
@@ -116,23 +177,23 @@ export default function BlogForm() {
                   }
                 }}
               />
-              {values?.image instanceof File ? (
-                <div className="mt-4">
-                  <Image
-                    src={URL.createObjectURL(values.image)}
-                    alt="Preview"
-                    width={400}
-                    height={200}
-                    className="rounded-md border"
-                  />
-                </div>
+
+              {values.image ? (
+                <ImagePreview image={values.image} />
               ) : (
-                <div className="w-96 h-52 bg-gray-700"></div>
+                <div className="w-96 h-52 mt-4 bg-gray-200 rounded-md flex items-center justify-center text-gray-500">
+                  Pré-visualização da imagem
+                </div>
               )}
             </div>
           </div>
 
-          <FormButton title="Enviar" loading={isSubmitting} type="submit" disabled={isSubmitting} />
+          <FormButton
+            title={blogEdit ? 'Atualizar' : 'Salvar'}
+            loading={isSubmitting}
+            type="submit"
+            disabled={isSubmitting}
+          />
         </Form>
       )}
     </Formik>
